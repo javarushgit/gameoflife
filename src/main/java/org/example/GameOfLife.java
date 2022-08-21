@@ -7,14 +7,18 @@ public class GameOfLife {
   int x;
   int y;
   String[][] field;
+  File input;
+  File output;
 
   // TODO:
   public void game(String fileNameInput, String fileNameOutput) {
-    readFileInput(fileNameInput);
+    input = new File("C:\\Java\\mygameoflife\\src\\test\\resources", fileNameInput);
+    output = new File("C:\\Java\\mygameoflife\\src\\test\\resources", fileNameOutput);
+    readFileInput(input);
     for (int i = 0; i < iterator; i++) {
       oneLifeCycle();
     }
-    fillOutputFile(fileNameOutput);
+    fillOutputFile(output);
   }
   private void oneLifeCycle(){
     String [][] newField = new String[x][y];
@@ -63,8 +67,8 @@ private void sizeFieldAndIterator(String line){
   private void initializeArray(){
     field = new String[x][y];
   }
-  private void readFileInput(String fileNameInput){
-    try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileNameInput))) {
+  private void readFileInput(File input){
+    try (BufferedReader bufferedReader = new BufferedReader(new FileReader(input))) {
       sizeFieldAndIterator(bufferedReader.readLine());
       initializeArray();
       int i = 0;
@@ -82,24 +86,20 @@ private void sizeFieldAndIterator(String line){
       throw new RuntimeException(e);
     }
   }
-  private void fillOutputFile(String file){
-    try(FileWriter fileWriter = new FileWriter(file)) {
-      for (String[] strings : field) {
-        for (String string : strings) {
+  private void fillOutputFile(File output){
+    try(FileWriter fileWriter = new FileWriter(output)) {
+      for (int i = 0; i < field.length; i++) {
+        for (int j = 0; j < field[i].length; j++) {
           String element;
-          if ((element = string) != null)
-            fileWriter.write(element + " ");
+          element = field[i][j];
+          fileWriter.write(element + " ");
         }
-        fileWriter.write("\n");
+        if (i < field.length - 1)
+          fileWriter.write("\n");
       }
     }
     catch (IOException e){
       System.out.println(e.getMessage());
     }
-  }
-
-  public static void main(String[] args) {
-    GameOfLife gameOfLife = new GameOfLife();
-    gameOfLife.game("InputText.txt", "OutputText.txt");
   }
 }
