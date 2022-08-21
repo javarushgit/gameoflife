@@ -69,9 +69,17 @@ public class GameOfLife {
         System.arraycopy(newGeneration[i], 0, oldGeneration[i], 0, oldGeneration[i].length);
       }
     }
-      for(String[] string: newGeneration)
-      {
-        bufferedWriter.write(Arrays.toString(string) + "\n");
+      int lineCount = 0;
+      for(String[] string: newGeneration) {
+        String stringOut = Arrays.toString(string)
+                .replaceAll("[][,]]", "")
+                .replaceAll("\\[", "");
+        if (lineCount == 0) {
+          bufferedWriter.write(stringOut);
+          lineCount++;
+        }
+        else
+          bufferedWriter.write("\n"+stringOut);
       }
     }catch (IOException e){
       System.out.println("Some problem with file!");
