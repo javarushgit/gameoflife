@@ -7,8 +7,8 @@ public class GameOfLife {
     private int x;
     private int y;
     private char[][] field;
-    File input;
-    File output;
+    private File input;
+    private File output;
 
     // TODO:
     public void game(String fileNameInput, String fileNameOutput) {
