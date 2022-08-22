@@ -27,37 +27,37 @@ class GameOfLifeTest {
 
     @Test
     public void stableFigure() {
-        game.game("inputStable1.txt", "outputStable1.txt");
+        game.game("src/test/resources/inputStable1.txt", "outputStable1.txt");
         assertTrue(equalsFile("expectedStable1.txt", "outputStable1.txt"));
     }
 
     @Test
     public void stableFigure2() {
-        game.game("inputStable2.txt", "outputStable2.txt");
+        game.game("src/test/resources/inputStable2.txt", "src/test/resources/outputStable2.txt");
         assertTrue(equalsFile("expectedStable2.txt", "outputStable2.txt"));
     }
 
     @Test
     public void oscillatorFigure() {
-        game.game("inputOscillator.txt", "outputOscillator.txt");
+        game.game("src/test/resources/inputOscillator.txt", "src/test/resources/outputOscillator.txt");
         assertTrue(equalsFile("expectedOscillator.txt", "outputOscillator.txt"));
     }
 
     @Test
     public void oscillatorFigure2() {
-        game.game("inputOscillator2.txt", "outputOscillator2.txt");
+        game.game("src/test/resources/inputOscillator2.txt", "src/test/resources/outputOscillator2.txt");
         assertTrue(equalsFile("expectedOscillator2.txt", "outputOscillator2.txt"));
     }
 
     @Test
     public void gliderFigureEasy() {
-        game.game("inputGliderEasy.txt", "outputGliderEasy.txt");
+        game.game("src/test/resources/inputGliderEasy.txt", "src/test/resources/outputGliderEasy.txt");
         assertTrue(equalsFile("expectedGliderEasy.txt", "outputGliderEasy.txt"));
     }
 
     @Test
     public void gliderFigure() {
-        game.game("inputGlider.txt", "outputGlider.txt");
+        game.game("src/test/resources/inputGlider.txt", "src/test/resources/outputGlider.txt");
         assertTrue(equalsFile("expectedGlider.txt", "outputGlider.txt"));
     }
 }
