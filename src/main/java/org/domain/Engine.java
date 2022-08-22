@@ -41,6 +41,7 @@ public class Engine {
     public static void lifeCycle() {
         char[][] newLife = new char[y][x];
         for (int life = 0; life < numberOfLives; life++) {
+
             for (int i = 0; i < y; i++) {
 
                 for (int j = 0; j < x; j++) {

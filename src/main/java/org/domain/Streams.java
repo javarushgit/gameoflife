@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 public class Streams {
 
     public static void inputFile(String nameFileInput) throws IOException {
-        String path="src/test/resources/"+nameFileInput
+        String path="src/test/resources/"+nameFileInput;
         FileReader fr = new FileReader(path);
         BufferedReader reader = new BufferedReader(fr);
         String line = reader.readLine( );
@@ -36,7 +36,7 @@ public class Streams {
 
 
     public static void outputFile(String nameFileOutput) throws IOException {
-        String path="src/test/resources/"+nameFileOutput
+        String path="src/test/resources/"+nameFileOutput;
         StringBuilder stringBuilder = new StringBuilder( );
         char[][] tmp = Engine.getFieldOfLife( );
         for (int G = 0; G < Engine.getY( ); G++) {
