@@ -6,7 +6,8 @@ import java.nio.charset.StandardCharsets;
 public class Streams {
 
     public static void inputFile(String nameFileInput) throws IOException {
-        FileReader fr = new FileReader(nameFileInput);
+        String path="src/test/resources/"+nameFileInput
+        FileReader fr = new FileReader(path);
         BufferedReader reader = new BufferedReader(fr);
         String line = reader.readLine( );
         String[] taskСonditions = line.split(",");
@@ -35,6 +36,7 @@ public class Streams {
 
 
     public static void outputFile(String nameFileOutput) throws IOException {
+        String path="src/test/resources/"+nameFileOutput
         StringBuilder stringBuilder = new StringBuilder( );
         char[][] tmp = Engine.getFieldOfLife( );
         for (int G = 0; G < Engine.getY( ); G++) {
@@ -43,7 +45,7 @@ public class Streams {
             }
             stringBuilder.deleteCharAt(stringBuilder.length( ) - 1);
             stringBuilder.append("\n");
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(nameFileOutput), StandardCharsets.UTF_8));
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8));
             out.append(stringBuilder);
             out.close( );
         }

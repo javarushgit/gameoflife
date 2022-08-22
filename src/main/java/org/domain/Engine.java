@@ -49,9 +49,9 @@ public class Engine {
 
                 }
 
-            }
+            } fieldOfLife = newLife;
         }
-        fieldOfLife = newLife;
+
 
     }
 
