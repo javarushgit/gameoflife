@@ -3,22 +3,19 @@ package org.example;
 import java.io.*;
 
 public class GameOfLife {
-    private int iterator;
+    private int howManyCycles;
     private int x;
     private int y;
     private char[][] field;
-    private File input;
-    private File output;
 
-    // TODO:
     public void game(String fileNameInput, String fileNameOutput) {
-        input = new File("src\\test\\resources", fileNameInput);
-        output = new File("src\\test\\resources", fileNameOutput);
+        File input = new File("src\\test\\resources", fileNameInput);
+        File output = new File("src\\test\\resources", fileNameOutput);
         readFileInput(input);
-        for (int i = 0; i < iterator; i++) {
+        for (int i = 0; i < howManyCycles; i++) {
             oneLifeCycle();
         }
-        fillOutputFile(output);
+        writeToFile(output);
     }
 
     private void oneLifeCycle() {
@@ -65,21 +62,17 @@ public class GameOfLife {
         return element == 'X';
     }
 
-    private void workFirstLine(String line) {
+    private void workWithFirstLine(String line) {
         String[] array = line.split(",");
         x = Integer.parseInt(array[0]);
         y = Integer.parseInt(array[1]);
-        iterator = Integer.parseInt(array[2]);
-    }
-
-    private void initializeArray() {
-        field = new char[x][y];
+        howManyCycles = Integer.parseInt(array[2]);
     }
 
     private void readFileInput(File input) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(input))) {
-            workFirstLine(bufferedReader.readLine());
-            initializeArray();
+            workWithFirstLine(bufferedReader.readLine());
+            field = new char[x][y];
             int i = 0;
             while (bufferedReader.ready()) {
                 char[] line = bufferedReader.readLine().toCharArray();
@@ -96,13 +89,16 @@ public class GameOfLife {
         }
     }
 
-    private void fillOutputFile(File output) {
+    private void writeToFile(File output) {
         try (FileWriter fileWriter = new FileWriter(output)) {
             char element;
             for (int i = 0; i < field.length; i++) {
                 for (int j = 0; j < field[i].length; j++) {
                     element = field[i][j];
-                    fileWriter.write(element + ' ');
+                    if (j < field[i].length - 1)
+                        fileWriter.write(element + " ");
+                    else
+                        fileWriter.write(element);
                 }
                 if (i < field.length - 1)
                     fileWriter.write("\n");
@@ -110,10 +106,5 @@ public class GameOfLife {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
-        GameOfLife gameOfLife = new GameOfLife();
-        gameOfLife.game("FileInput.txt", "FileOutput.txt");
     }
 }
