@@ -8,140 +8,133 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class GameOfLife {
-  private char[][] playField; // our play field
-  private int fieldLengthX; // field length by X coordinate(columns count)
-  private int fieldLengthY; // field length by Y coordinate(rows count)
-  private int genCount; // generation count
-  private static final String OUTPUT_PATH = "target/test-classes/";
-  private static final String INPUT_PATH = "src/test/resources/";
-  private static final char aliveCell = 'X';
-  private static final char deadCell = 'O';
+
+  private  int y;
+  private  int x;
+  private  int numberOfLives;
+  private  char[][] fieldOfLife;
+  private String path="src/test/resources/";
 
 
-  /**
-   * method that starts the Game of Life.
-   * @param fileNameInput file name of input data of first generation.
-   * @param fileNameOutput file name for output data for final generation.
-   */
-  public void game(String fileNameInput, String fileNameOutput) {
-    readFile(INPUT_PATH + fileNameInput);
-    run();
-    writeFile(OUTPUT_PATH + fileNameOutput);
+  public void game(String fileNameInput, String fileNameOutput) throws IOException {
+   inputFile(fileNameInput);
+   lifeCycle();
+    outputFile(fileNameOutput);
   }
 
-  private void run() {
-    char[][] newPlayField;
-    for (int i = 0; i < genCount; i++) { // generation count loop
-      newPlayField = new char[fieldLengthY][fieldLengthX];
-      for (int y = 0; y < fieldLengthY; y++) { // rows loop
-        for (int x = 0; x < fieldLengthX; x++) { // column loop
-          newPlayField[y][x] = getCellNextGen(y, x);
+  public  void setY(int vertically) {
+    y = vertically;
+  }
+
+  public  void setX(int horizontally) {
+    x = horizontally;
+  }
+
+  public  void setNumberOfLives(int numberOL) {
+    numberOfLives = numberOL;
+  }
+
+
+
+  public  void inputFile(String fileNameInput) throws IOException {
+    FileReader fr = new FileReader(path+fileNameInput);
+    BufferedReader reader = new BufferedReader(fr);
+    String line = reader.readLine( );
+    String[] taskСonditions = line.split(",");
+    int y = Integer.parseInt(taskСonditions[0]);
+    setY(y);
+    int x = Integer.parseInt(taskСonditions[1]);
+    setX(x);
+    setNumberOfLives(Integer.parseInt(taskСonditions[2]));
+    char[][] input = new char[y][x];
+    char[] tmp ;
+    for (int i = 0; i < y; i++) {
+      line = reader.readLine( );
+      if (line==null){ break;}
+      line = line.replace(" ", "");
+      tmp = line.toCharArray( );
+      for (int j = 0; j < x; j++) {
+        input[i][j] = tmp[j];
+      }
+
+    }
+    setFieldOfLife(input);
+
+  }
+
+  private   void setFieldOfLife(char[][] chars) {
+   fieldOfLife = chars;
+  }
+
+  public  void lifeCycle() {
+    char[][] newLife;
+    for (int life = 0; life < numberOfLives; life++) {
+      newLife = new char[y][x];
+      for (int i = 0; i < y; i++) {
+
+        for (int j = 0; j < x; j++) {
+
+          newLife[i][j] = weСheckЕheМiability(i, j);
+
         }
+
       }
-      playField = newPlayField;
+      fieldOfLife = newLife;
+
     }
+
   }
 
-  private void readFile(String fileNameInput) {
-    try (BufferedReader reader = new BufferedReader(new FileReader(fileNameInput))) {
-      String settings = reader.readLine();
-      setSettings(splitSettings(settings));
-      for (int y = 0; y < fieldLengthY; y++) {
-        for (int x = 0; x < fieldLengthX; x++) {
-          playField[y][x] = (char) reader.read();
-          reader.read();
-        }
-      }
-    }  catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private void writeFile(String fileNameOutput) {
-    StringBuilder data = new StringBuilder();
-    for (int y = 0; y < fieldLengthY; y++) {
-      for (int x = 0; x < fieldLengthX; x++) {
-        data.append(playField[y][x]).append(' ');
-      }
-      data.setLength(data.length() - 1); // remove whitespace
-      data.append('\n');
-    }
-
-    /*
-      Remove '\n' when all data appended
-      Even without this line it passes tests
-      But it should be
-     */
-    data.setLength(data.length() - 1);
-
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileNameOutput))) {
-      writer.write(data.toString());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private char getCellNextGen(int y, int x) {
-    int neighboursCount = 0;
-    int row;
-    int col;
+  private  char weСheckЕheМiability(int v, int h) {
+    int lifeСounter = 0;
+    char celuli = fieldOfLife[v][h];
+    char tmp;
+    int verticali;
+    int horizontali;
 
     for (int i = -1; i < 2; i++) {
       for (int j = -1; j < 2; j++) {
-        row = (y + i + fieldLengthY) % fieldLengthY;
-        col = (x + j + fieldLengthX) % fieldLengthX;
-        if (playField[row][col] == aliveCell) {
-          neighboursCount++; // Counts itself if cell with given coordinates alive
+        verticali = (v + i + y) % y;
+        horizontali = (h + j + x) % x;
+        tmp = fieldOfLife[verticali][horizontali];
+        if (tmp == 'X') {
+          lifeСounter++;
         }
       }
     }
-
-    if (playField[y][x] == aliveCell) {
-      neighboursCount--;
-      return getCellByState(shouldAliveCellLive(neighboursCount));
-    } else {
-      return getCellByState(shouldDeadCellLive(neighboursCount));
+    if (celuli=='X') {
+      lifeСounter --;
+      return getCellByState(shouldAliveCellLive(lifeСounter));
     }
+    else {return getCellByState(shouldDeadCellLive(lifeСounter));}
+
   }
 
-  private boolean shouldAliveCellLive(int neighboursCount) {
-    return neighboursCount > 1 && neighboursCount < 4;
+  private static boolean shouldAliveCellLive(int lifCounter) {
+    return lifCounter > 1 && lifCounter < 4;
   }
 
-  private boolean shouldDeadCellLive(int neighboursCount) {
-    return neighboursCount == 3;
+  private static boolean shouldDeadCellLive(int lifCounter) {
+    return lifCounter == 3;
   }
 
-  private char getCellByState(boolean state) {
-    return state ? GameOfLife.aliveCell : GameOfLife.deadCell;
+  private static char getCellByState(boolean state) {
+    return state ? 'X' : 'O';
   }
 
-  private void setSettings(int[] settings) {
-    fieldLengthY = settings[0];
-    fieldLengthX = settings[1];
-    genCount = settings[2];
-    playField = new char[fieldLengthY][fieldLengthX];
-  }
-
-  /**
-   * Splits string of game parameters by ','
-   * Custom split, faster than String::split
-   * Created for our case to improve performance.
-   *
-   * @param settings string of game parameters
-   * @return array of game parameters
-   */
-  private int[] splitSettings(String settings) {
-    int[] array = new int[3];
-    int begin = 0;
-    int index = 0;
-    for (int i = 0; i < settings.length(); i++) {
-      if (settings.charAt(i) == ',') {
-        array[index++] = Integer.parseInt(settings.substring(begin, i));
-        begin = i + 1;
+  public  void outputFile(String fileNameOutput) throws IOException {
+    StringBuilder stringBuilder = new StringBuilder( );
+    char[][] tmp = fieldOfLife;
+    for (int G = 0; G < y; G++) {
+      for (int E = 0; E < x; E++) {
+        stringBuilder.append(tmp[G][E]).append(" ");
       }
+      stringBuilder.deleteCharAt(stringBuilder.length( ) - 1);
+      stringBuilder.append("\n");
+      BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path+fileNameOutput)));
+      out.append(stringBuilder);
+      out.close( );
     }
-    array[index] = Integer.parseInt(settings.substring(begin));
-    return array;
+
   }
 }
