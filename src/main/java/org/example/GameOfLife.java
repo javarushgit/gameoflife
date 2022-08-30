@@ -1,25 +1,35 @@
 package org.example;
 
-public class Game {
+public class GameOfLife {
 
     private char alive = 'X';
     private char dead = 'O';
     public char[][] cells;
-    public int rowCells;
-    public int columnCells;
+    private final String OUTPUT_PATH = "target/test-classes/";
+    private final String INPUT_PATH = "src/test/resources/";
 
-    public char[][] cycle() {
+    ReadWriteFile rwf = new ReadWriteFile();
+
+    public void game(String inputFileName, String outputFileName){
+        cells = rwf.reader(INPUT_PATH + inputFileName);
+        for (int i = 0; i < rwf.getCycleNumber(); i++) {
+            cells = GameCycle();
+            rwf.writer(cells,OUTPUT_PATH + outputFileName);
+        }
+    }
+
+    public char[][] GameCycle() {
         int countAliveNeighbor;
-        int rowCells = this.rowCells;
-        int columnCells = this.columnCells;
+        int rowCells = rwf.getRowCells();
+        int columnCells = rwf.getColumnCells();
         char[][] tempCells = new char[rowCells][columnCells];
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[0].length; j++) {
                 if (cells[i][j] == alive) {
-                    countAliveNeighbor = isNeighborAlive(i, j);
+                    countAliveNeighbor = CountNeighborAlive(i, j);
                     tempCells[i][j] = (countAliveNeighbor < 2 || countAliveNeighbor > 3) ? dead : alive;
                 } else {
-                    countAliveNeighbor = isNeighborAlive(i, j);
+                    countAliveNeighbor = CountNeighborAlive(i, j);
                     tempCells[i][j] = (countAliveNeighbor == 3) ? alive : cells[i][j];
                 }
             }
@@ -27,12 +37,12 @@ public class Game {
         return cells = tempCells;
     }
 
-    private int isNeighborAlive(int i, int j) {
+    private int CountNeighborAlive(int i, int j) {
         int countAliveNeighbor = 0;
         for (int k = -1; k <= 1; k++) {
             for (int l = -1; l <= 1; l++) {
-                int rowIndex = (i + k + this.rowCells) % this.rowCells;
-                int columnIndex = (j + l + this.columnCells) % this.columnCells;
+                int rowIndex = (i + k + rwf.getRowCells()) % rwf.getRowCells();
+                int columnIndex = (j + l + rwf.getColumnCells()) % rwf.getColumnCells();
                 if (cells[rowIndex][columnIndex] == alive) {
                     countAliveNeighbor++;
                 }

@@ -6,7 +6,7 @@ public class ReadWriteFile {
 
     private int rowCells;
     private int columnCells;
-    private int lifeCount;
+    private int CycleNumber;
 
     public char[][] reader(String filename) {
         char[][] cells = null;
@@ -14,7 +14,7 @@ public class ReadWriteFile {
             String[] firstLine = bf.readLine().split(",");
             rowCells = Integer.parseInt(firstLine[0]);
             columnCells = Integer.parseInt(firstLine[1]);
-            lifeCount = Integer.parseInt(firstLine[2]);
+            CycleNumber = Integer.parseInt(firstLine[2]);
             cells = new char[rowCells][columnCells];
             for (int i = 0; i < cells.length; i++) {
                 for (int j = 0; j < cells[0].length; j++) {
@@ -51,8 +51,8 @@ public class ReadWriteFile {
     public int getColumnCells() {
         return columnCells;
     }
-    public int getLifeCount() {
-        return lifeCount;
+    public int getCycleNumber() {
+        return CycleNumber;
     }
 
 }
